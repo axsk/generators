@@ -1,32 +1,30 @@
-function infinit_generator(t)
+""" generate the infinitesimal generator for time t
 
-    # MATLAB code that consists of the following parts
-    #
-    # PART 1: Defining the scenario
-    #         sc1 defines the potential that is used for the example {0,1,2}
+PART 1: Defining the scenario
+    sc1 defines the potential that is used for the example {0,1,2}
 
-    # PART 2: Defining the physical constants
-    #         The inverse temperature beta defines the Boltzmann density
-    #         The computations can be based on finer or coarser
-    #         discretizations which should lead to an adjusted flux (LUCA!)
-    #         The potential energy function is plotted
+PART 2: Defining the physical constants
+    The inverse temperature beta defines the Boltzmann density
+    The computations can be based on finer or coarser
+    discretizations which should lead to an adjusted flux (LUCA!)
+    The potential energy function is plotted
 
-    # PART 3: The Q-matrix assembly
-    #         If the potential is chosen to be time-independent
-    #         then the results should be the same as for
-    #         "ordinary" SQRA => the Q-assembly is done like here
+PART 3: The Q-matrix assembly
+    If the potential is chosen to be time-independent
+    then the results should be the same as for
+    "ordinary" SQRA => the Q-assembly is done like here
 
-    ## SETTINGS
-    #scenario of potential
-    sc1 = 2 # 0=time-indep. potential, 1= vanishing potential, 2 = moving potential
+Arguments:
+sc1 = 2: scenario of potential
+    (0=time-indep. potential, 1= vanishing potential, 2 = moving potential)
 
-    #spatial discretization
-    grids=30      #number of intervals in [0,1]-space (e.g. 30)
+grids=30: number of intervals in [0,1]-space (e.g. 30)
 
-    #physical constant which has an effect on eigenvalues of Q
-    beta=10       #inverse temperature for Boltzmann (e.g. 10)
+beta=10: inverse temperature for Boltzmann (e.g. 10)
+    (physical constant which has an effect on eigenvalues of Q)
+"""
+function infinit_generator(t; sc1=2, grids=30, beta=10)
 
-    ##
     # grid & flux computation according to Luca Donati
     grid=1/grids:1/grids:1;
     flux=grids^2/beta*1/9;
