@@ -24,9 +24,10 @@
 
 ## SETTINGS
 include("infgen.jl")
+include("bickleyjet.jl")
 using LinearAlgebra, SparseArrays, Arpack, Plots, Random
 
-function nonautgen()
+function nonautgen(gen)
     #scenario of Q-assembly
     sc2 = 0 # 0=directed time (1=backward, 2=rows&columns, 3=doubly stochastic)
 
@@ -51,7 +52,7 @@ function nonautgen()
     if (sc2<3)
         Q=[]
         for s=timesteps:-1:1
-            Qs=infinit_generator(t[s])
+            Qs=generator(t[s], gen)
             grids=size(Qs,1)
             ds=sum(Qs, dims = 2)       #and entropy part of Q
 
