@@ -23,7 +23,7 @@
 
 
 ## SETTINGS
-include("infgen.jl")
+include("movingpotential.jl")
 include("bickleyjet.jl")
 using LinearAlgebra, SparseArrays, Arpack, Plots, Random
 

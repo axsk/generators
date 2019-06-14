@@ -1,6 +1,6 @@
 
 using Parameters
-@with_kw struct PotentialGenerator
+@with_kw struct MovingPotential
     sc1 = 2
     grids = 30
     beta = 10
@@ -31,8 +31,8 @@ grids=30: number of intervals in [0,1]-space (e.g. 30)
 beta=10: inverse temperature for Boltzmann (e.g. 10)
     (physical constant which has an effect on eigenvalues of Q)
 """
-function infinit_generator(t, c::PotentialGenerator)
-    @unpack_PotentialGenerator c
+function generator(t, c::MovingPotential)
+    @unpack sc1, grids, beta = c
 
     # grid & flux computation according to Luca Donati
     grid=1/grids:1/grids:1;
