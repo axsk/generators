@@ -24,6 +24,8 @@ using Memoize
     k3 = 6 / 6.371
 end
 
+length(b::BickleyJet) = b.nx * b.ny
+
 
 function generator(t, conf::BickleyJet)
     @unpack_BickleyJet conf
