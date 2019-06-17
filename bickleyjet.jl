@@ -84,6 +84,7 @@ end
 using KrylovKit
 
 function stepflow(conf::BickleyJet, x0, t0, dt)
+    @unpack nx, ny = conf
     g = generator(t0, conf)
     xt, _ = exponentiate(g', dt, vec(x0))
     xt = reshape(xt, ny, nx)
