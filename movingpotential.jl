@@ -59,14 +59,13 @@ function generator(t, c::MovingPotential)
 
     # adjacency matrix of the intervals for Q-assembly
     # A=[[zeros(grids-1,1),eye(grids-1)];zeros(1,grids)];
-    A = diagm(1=>ones(grids-1))
-    A = A+A'
+    A = spdiagm(1=>ones(grids-1), -1=>ones(grids-1))
 
     # Q assembly for time-step
     sr=sqrt.(exp.(-beta*potential)); #Boltzmann distribution
     sr=sr/sum(sr);
 
-    D  = diagm(0=>sr);
-    D1 = diagm(0=>1 ./sr);         #SQRA: potential dependent part
+    D  = Diagonal(sr);
+    D1 = Diagonal(1 ./sr);         #SQRA: potential dependent part
     Q=flux*D1*A*D;
 end
