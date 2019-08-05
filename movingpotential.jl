@@ -6,6 +6,7 @@ using Parameters
     beta = 10
 end
 
+
 length(m::MovingPotential) = m.grids
 
 """ generate the infinitesimal generator for time t

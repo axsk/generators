@@ -107,3 +107,7 @@ function testflow(conf::BickleyJet = BickleyJet();
 
     x
 end
+
+function flowheatmap(generator::AbstractMatrix, nx=120, ny=36)
+    heatmap(reshape(diag(G), ny, nx))
+end

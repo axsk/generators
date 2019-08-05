@@ -1,8 +1,5 @@
 using LinearAlgebra, SparseArrays, Arpack, Plots, Random, Parameters
 
-include("movingpotential.jl")
-include("bickleyjet.jl")
-
 @with_kw struct AugmentedGenerator
     gen = MovingPotential() # the underlying generator
     ntime = 10     # discretization depth which should not influence eigenvalues of Q
@@ -17,7 +14,6 @@ function generator(c::AugmentedGenerator)
     @unpack sc2, gen, ntime = c
 
     t=1/ntime:1/ntime:1
-    eye(n) = Diagonal(ones(n))
     n = length(gen)
 
     #assemble big Q-matrix starting from last time step
