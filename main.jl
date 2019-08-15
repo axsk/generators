@@ -1,16 +1,23 @@
 include("processes/processes.jl")
-
 include("embeddedspacetime.jl")
-function test(; beta=1, flux=1, tmax=1)
 
-    process = DoubleWell(beta, flux, 20)
-    timegrid = range(0, stop=tmax, length=3)
+function cluster(process, timegrid)
     G = augmentedembeddedmatrix(process, timegrid)
     heatmap(G) |> display
     e,v = sortschur(schur(G' |> collect))
-    @show e
-    plot(v[:,1:6])
-
+    plot(v[:,1:6]) |> display
+    G, e, v
 end
 
-test(flux=3)
+
+function test1()
+    process = DoubleWell(beta, flux, 20)
+    timegrid = range(0, stop=tmax, length=3)
+    cluster(process, timegrid)
+end
+
+function test2()
+    process = BarrierSwitch()
+    timegrid = [0,1]
+    cluster(process, timegrid)
+end

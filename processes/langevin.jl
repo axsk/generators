@@ -1,13 +1,14 @@
 using Parameters
 
-import Base.length
-length(p::OverdampedLangevin) = length(p.grid)
 
 @with_kw struct OverdampedLangevin <: Process
     V::Function
     phi
     grid::Vector
 end
+
+length(p::OverdampedLangevin) = length(p.grid)
+
 
 # todo: add temperature/noise and flux-constant!
 function generatormatrix(p::OverdampedLangevin, t)
@@ -43,7 +44,7 @@ end
 # note that here beta is used to scale the potential
 DoubleWell(beta, phi, ngrid) = OverdampedLangevin(
     (x,t) -> beta * (x^2-1)^2,
-    flux,
+    phi,
     range(-2,2, length=ngrid))
 
 ShiftingWells() = OverdampedLangevin(
