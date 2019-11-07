@@ -48,4 +48,6 @@ DoubleWell(beta, phi, ngrid) = OverdampedLangevin(
     range(-2,2, length=ngrid))
 
 ShiftingWells() = OverdampedLangevin(
-    (x,t) -> (x^2-1))
+    (x,t) -> (x^2-1)^2+x*t,
+    1,
+    range(-2,2, length=5))
