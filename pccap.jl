@@ -117,7 +117,7 @@ end
 
 function randomstochasticmatrix(n, reversible=true)
     P = rand(n,n)
-    if symmetric
+    if reversible
         P = (P + P') / 2
     end
     P ./= sum(P, dims=2)

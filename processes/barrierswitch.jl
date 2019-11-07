@@ -4,7 +4,7 @@ using Parameters
 #  1d process with 4 cells divided by barriers (i.e. no exchange), where the central barrier is turned on at time `tswitch`
 #  [ --- | --- (|) --- | ---]
 @with_kw struct BarrierSwitch <: Process
-    tswitch = 1
+    tswitch = [1] # switchting points, process starts closed. e.g. [0] for constant open
     cellresolution = 2
     rate = 1
 end
@@ -28,7 +28,7 @@ function generatormatrix(p::BarrierSwitch, t)
         end
     end
 
-    if t >= tswitch
+    if findfirst(x->x>=t, [tswitch...,Inf]) % 2 == 0
         i = 2 * cellresolution
         G[i, i+1] = 1
         G[i+1, i] = 1
