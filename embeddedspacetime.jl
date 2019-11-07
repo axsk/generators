@@ -1,5 +1,5 @@
-
 using Arpack, LinearAlgebra
+using SparseArrays
 using Plots
 # actually it should be embedded augmented / space-time markov chain right?
 # embedded space-time jump chain (estjc)
@@ -9,18 +9,18 @@ function augmentedembeddedmatrix(process, ts)
     n  = length(process)
 
     dt = vcat(diff(ts), Inf) # boundary open to the right
-    T = zeros(n*ntime, n*ntime)
+    T = spzeros(n*ntime, n*ntime)
 
     function timeslice(i,j)
         view(T, (i-1)*n + 1 : (i-1)*n + n, (j-1)*n + 1 : (j-1)*n + n)
     end
 
     Q = [generatormatrix(process, t) for t in ts]
-    H = [Diagonal(exp.(dt[i] * diag(Q[i]))) for i in 1:ntime]
-    L = [I - H for H in H]
+    H = [Diagonal(exp.(dt[i] * diag(Q[i]))) for i in 1:ntime] # prob not to jump (hold) in timeframe 
+    L = [I - H for H in H] # prob to jump (leave) inside timeframe
     L[end] = Diagonal(ones(n))
 
-    R = [I - Diagonal(Q)\Q for Q in Q]
+    R = [I - Diagonal(Q)\Q for Q in Q] # jump matrix
 
     for i = 1:ntime
         for j = i:ntime
