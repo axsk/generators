@@ -40,7 +40,7 @@ function galerkin(process, ts)
 
     dt = vcat(diff(ts))
 
-    Q = [generatormatrix(process, t) for t in ts]
+    Q = [generatormatrix(process, t) for t in ts[1:m]]
     qout = [-diag(Q[t]) for t in 1:m]
     qt = [(Q[t] - Diagonal(Q[t])) ./ qout[t] for t in 1:m]
     s = [exp.(-dt[t]*qout[t]) for t in 1:m]
@@ -53,10 +53,10 @@ function galerkin(process, ts)
         for tj = ti:m
             if ti==tj
                 timeslice(ti,tj) .=
-                    qt[tj] .* (1 ./ qout[ti] .* (s[ti] + dt[ti] * qout[ti] .- 1))
+                    qt[tj] .* (1 ./ qout[ti] .* (s[ti] + dt[ti] * qout[ti] .- 1)) / dt[ti]
             elseif ti<tj
                 timeslice(ti,tj) .=
-                    qt[tj] .* (1 ./ qout[ti] .* (1 .-s[ti]) .* (1 .-s[tj]) .* dotprod(s, ti, tj))
+                    qt[tj] .* (1 ./ qout[ti] .* (1 .-s[ti]) .* (1 .-s[tj]) .* dotprod(s, ti, tj)) / dt[ti]
             end
         end
     end
@@ -102,4 +102,18 @@ function sortschur(G)
         S = ordschur!(S, sel)
     end
     S
+end
+
+function commitor(T, terminal)
+    TT = T |> collect
+    nm = size(TT, 1)
+    n = length(terminal)
+    bnd = nm - n
+
+    TT[1:bnd, 1:bnd] = TT[1:bnd, 1:bnd] - I
+    TT[bnd+1:end, :] .= 0
+    TT[bnd+1:end, bnd+1:end] = I(n)
+    x = zeros(nm)
+    x[bnd+1:end] = terminal
+    TT\x
 end

@@ -24,11 +24,26 @@ function test2()
     cluster(process, timegrid)
 end
 
-begin
+if false 
     G,e,v = cluster(BarrierSwitch(), [0,1], adj=true)
     plot(heatmap(v), heatmap(e), layout=grid(2,1))
 end
 
-function massageev(v,e)
+gauss(x, mu, sigma) = 1 / (sigma * sqrt(2*pi)) * exp( - 1/2 * ((x-mu)/sigma)^2)
 
+PotentialShiftingBarrier() = (x,t) -> gauss(x, 0.2 + t/2, 0.5)
+
+function experiment(V, xs, ts, comittor, flux=1)
+    p = OverdampedLangevin(V, flux, xs, false)
+    g = galerkin(p, ts)
+
+    term = zeros(length(xs))
+    term[ceil(length(xs)/2):end] .= 1
+    
+    if commitor != nothing
+        c = commitor(g, term)
+    end
+    
+    Base.@locals
 end
+
