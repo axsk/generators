@@ -1,6 +1,8 @@
-using Revise
+module EAMC
 
-includet("main.jl")
-includet("embeddedspacetime.jl")
-includet("processes/processes.jl")
-#includet("plots.jl")
+include("main.jl")
+include("embeddedspacetime.jl")
+include("processes/processes.jl")
+#include("plots.jl")
+
+end

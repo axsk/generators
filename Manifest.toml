@@ -273,9 +273,9 @@ version = "3.1.0"
 
 [[GLMakie]]
 deps = ["AbstractPlotting", "ColorTypes", "Colors", "FileIO", "FixedPointNumbers", "GLFW", "GeometryTypes", "LinearAlgebra", "Markdown", "MeshIO", "ModernGL", "Observables", "Printf", "Serialization", "StaticArrays"]
-git-tree-sha1 = "aa6eb6f0de149f75a7bd9fc369436f54904d9747"
+git-tree-sha1 = "10f1cc1acd409c7d57d2a9c55e09a54dc982b63d"
 uuid = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
-version = "0.0.9"
+version = "0.0.10"
 
 [[GR]]
 deps = ["Base64", "DelimitedFiles", "LinearAlgebra", "Printf", "Random", "Serialization", "Sockets", "Test"]
@@ -375,6 +375,12 @@ git-tree-sha1 = "c1048817fe5711f699abc8fabd47b1ac6ba4db04"
 uuid = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
 version = "0.5.1"
 
+[[KrylovKit]]
+deps = ["LinearAlgebra", "Printf"]
+git-tree-sha1 = "b100508f36ac1d713c6976e5a71271912871f4e3"
+uuid = "0b1a1467-8014-51b9-945f-bf0ae24f4b77"
+version = "0.4.0"
+
 [[LibGit2]]
 uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 
@@ -437,6 +443,12 @@ version = "0.9.7"
 deps = ["Test"]
 git-tree-sha1 = "ddfd6d13e330beacdde2c80de27c1c671945e7d9"
 uuid = "442fdcdd-2543-5da2-b0f3-8c86c306513e"
+version = "0.3.0"
+
+[[Memoize]]
+deps = ["Test"]
+git-tree-sha1 = "d9683969337ad20dc957122038bd2c0ead4b5209"
+uuid = "c03570c3-d221-55d1-a50c-7939bbd78826"
 version = "0.3.0"
 
 [[MeshIO]]
