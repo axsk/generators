@@ -9,20 +9,17 @@ end
 
 length(p::OverdampedLangevin) = length(p.grid)
 
-
-# todo: add temperature/noise and flux-constant!
-function generatormatrix(p::OverdampedLangevin, t)
-    @unpack_OverdampedLangevin p
-
-    n = length(grid)
-    VV = map(x->exp(-V(x,t)), grid)
+function sqra(V, xs, beta, flux; periodic = false)
+    n = length(xs)
+    VV = map(xs) do x
+        exp(- beta * V(x))
+    end
 
     G = zeros(n,n)
 
-    # square root approximation
     for i = 1:n-1
-        G[i, i+1] = sqrt(VV[i+1]   / VV[i])
-        G[i+1, i] = sqrt(VV[i] / VV[i+1])
+            G[i, i+1] = sqrt(VV[i+1]   / VV[i])
+            G[i+1, i] = sqrt(VV[i] / VV[i+1])
     end
 
     if periodic
@@ -30,11 +27,16 @@ function generatormatrix(p::OverdampedLangevin, t)
         G[end,1] = sqrt(VV[1]   / VV[end])
     end
 
-    # diagonal
     for i = 1:n
         G[i,i] = -sum(G[i,:])
     end
-    G * phi
+    G * flux
+end
+
+# todo: add temperature/noise and flux-constant!
+function generatormatrix(p::OverdampedLangevin, t)
+    @unpack_OverdampedLangevin p
+    sqra(x->V(x,t), grid, 1, phi)
 end
 
 # autonomous double well
