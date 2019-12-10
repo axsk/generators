@@ -7,21 +7,21 @@ Base.range(a,b) = range(a,b, step=1)
 Base.range(a,b,n::Int) = range(a, b, length=n)
 
 @with_kw struct Flow <: Process
-    u = (x,t)->[1,0]
-    xgrid = range(0,nx)
-    ygrid = range(0,ny)
+    u = (t, x, y)->[1,0]
+    xs = range(0,nx)
+    ys = range(0,ny)
 end
 
-generatormatrix(f::Flow, t) = flowgenerator(f.xgrid, f.ygrid, (x,y) -> f.u(x,y,t))
+generatormatrix(f::Flow, t) = flowgenerator(f.xs, f.ys, (x,y) -> f.u(x,y,t))
 
-function flowgenerator(xgrid, ygrid, u)
-    nx = length(xgrid)
-    ny = length(ygrid)
+function flowgenerator(xs, ys, u)
+    nx = length(xs)
+    ny = length(ys)
 
     G = spzeros(nx*ny, nx*ny)
     ind = LinearIndices((1:nx, 1:ny))
-    for (i,x) in enumerate(xgrid)
-        for (j,y) in enumerate(ygrid)
+    for (i,x) in enumerate(xs)
+        for (j,y) in enumerate(ys)
             ux, uy = u(x,y)
             ii = i + Int(sign(ux)) 
             if 1 <= ii <= nx 
@@ -51,4 +51,8 @@ function myquiver(xs, ys, u)
         end
     end
     quiver(tx,ty,quiver=(tux,tuy))
+end
+
+function myquiver(f::Flow, t)
+    myquiver(f.xs, f.ys, (x,y)->f.u(t,x,y))
 end

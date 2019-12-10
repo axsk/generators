@@ -1,6 +1,8 @@
 using Arpack, LinearAlgebra
 using SparseArrays
 
+export galerkin
+
 function galerkin(Qs, dt)
     n = size(Qs[1], 1)
     m = length(Qs)
@@ -11,12 +13,11 @@ function galerkin(Qs, dt)
     qt = [(Qs[t] - Diagonal(Qs[t])) ./ qout[t] for t in 1:m]
     s = [exp.(-dt[t]*qout[t]) for t in 1:m]
 
-
     T = spzeros(n*m, n*m)
     timeslice(i,j) = view(T, (i-1)*n + 1 : (i-1)*n + n, (j-1)*n + 1 : (j-1)*n + n)
 
     for ti in 1:m
-        for tj = ti:m
+        for tj in ti:m
             if ti==tj
                 timeslice(ti,tj) .=
                     qt[tj] .* (1 ./ qout[ti] .* (s[ti] + dt[ti] * qout[ti] .- 1)) / dt[ti]

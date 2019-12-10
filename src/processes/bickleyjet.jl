@@ -24,7 +24,24 @@ using Memoize
     k3 = 6 / 6.371
 end
 
+xs(b::BickleyJet) = range(b.xmin, stop=b.xmax, length=b.nx) 
+ys(b::BickleyJet) = range(b.ymin, stop=b.ymax, length=b.ny)
+
 length(b::BickleyJet) = b.nx * b.ny
+
+function bickleyflow(b::BickleyJet, t, x, y)
+    @unpack_BickleyJet b
+
+    psi(t,x,y) = -U0 * L * tanh(y/L) + U0 * L * sech(y/L)^2 *
+        (A2 * cos(k2*(x-c2*t)) + A3 * cos(k3*(x-c3*t)))
+    
+    # TODO: scale with cell size
+    dx = derivative(y->-psi(t,x,y), y)
+    dy = derivative(x-> psi(t,x,y), x)
+
+    (dx, dy)
+end
+
 
 
 function generator(t, conf::BickleyJet)
