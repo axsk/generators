@@ -6,8 +6,10 @@ gauss(x, mu, sigma) = 1 / (sigma * sqrt(2*pi)) * exp( - 1/2 * ((x-mu)/sigma)^2)
 PotentialShiftingBarrier(sigma) = (x,t) -> gauss(x, 0.2 + t/2, sigma)
 
 PotentialDoubleWell() = (x,t) -> (x^2-1)^2 
-
 ShiftingWells() = (x,t) -> (x^2-1)^2+x*t 
+
+AppearingBarrier() = (x,t) -> t*gauss(x, .5, 0.1)
+VanishingBarrier() = (x,t) -> (1-t) * gauss(x, .5, .1)
 
 @with_kw struct Experiment
     xs = range(-1.5, 1.5, length=20) |> collect

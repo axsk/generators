@@ -6,4 +6,6 @@ include("processes/processes.jl")
 include("plots.jl")
 include("utils.jl")
 
+export sqra, galerkin, commitor
+
 end
