@@ -39,7 +39,8 @@ function PotentialExperiment(;
     dt = vcat(diff(ts), Inf),
     g = galerkin(Qs, dt),
     c = hcat((commitor(g, termcom([i], length(xs))) for i in 1:length(xs))...),
-    cc = c * optimize_maxassignment(c[1:length(xs),:], 2)[:,2] |> x->reshape(x, length(xs), length(ts)))
+    a = optimize_maxassignment(c[1:length(xs),:], 2),
+    cc = c * a |> x->reshape(x, length(xs), length(ts), 2))
 
     d = Base.@locals
     e = NamedTuple{Tuple(keys(d))}(values(d))
@@ -48,5 +49,7 @@ function PotentialExperiment(;
 end
 
 function plot_pot(e)
-    plot(e.xs, e.cc, title = "n=$(e.n) b=$(e.beta) f=$(e.flux) V=l$(methods(e.V).ms[1].line)", labels=e.ts')
+    pV = plot([e.V(x, t) for x in e.xs, t in e.ts], line_z = e.ts', legend=false)
+    pC = plot(e.xs, e.cc[:,:,1], title = "nx=$(length(e.xs)) b=$(e.beta) f=$(e.flux) V=l$(methods(e.V).ms[1].line)", line_z = e.ts', legend=false, colorbar=true)
+    plot(pV, pC)
 end
