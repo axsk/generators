@@ -3,37 +3,45 @@ using SparseArrays
 
 export galerkin
 
-function galerkin(Qs, dt)
+#galerkin(Qs::Vector{Array}, dt) = galerkin(map(sparse, Qs), dt)
+function galerkin(Qs::Vector{<:SparseMatrixCSC}, dt)
     n = size(Qs[1], 1)
     m = length(Qs)
-
     @assert length(dt) == m
 
-    qout = [-diag(Qs[t]) for t in 1:m]
-    qt = [(Qs[t] - Diagonal(Qs[t])) ./ qout[t] for t in 1:m]
-    s = [exp.(-dt[t]*qout[t]) for t in 1:m]
+    I = Int[]
+    J = Int[]
+    V = Float64[]
 
-    T = spzeros(n*m, n*m)
-    timeslice(i,j) = view(T, (i-1)*n + 1 : (i-1)*n + n, (j-1)*n + 1 : (j-1)*n + n)
+    qout = [collect(-diag(Qs[t])) for t in 1:m]
+    for i=1:m
+        replace!(qout[i], 0=>1.) # in case of 0 rates, replace with 1 to avoid division by 0. should not change any result since we multiply corresponding rows zero rates anyhow.
+    end
+    qt = [dropzeros((Qs[t] - Diagonal(Qs[t])) ./ qout[t]) for t in 1:m]
+    s = [exp.(-dt[t]*qout[t]) for t in 1:m]
 
     for ti in 1:m
         for tj in ti:m
-            qinv = 1. /qout[ti]
-            replace!(qinv, Inf=>0)
+            fact = 1 ./ qout[ti] ./ dt[ti]
             if ti==tj
-                timeslice(ti,tj) .=
-                    qt[tj] .* (1 ./ qout[ti] .* (s[ti] + dt[ti] * qout[ti] .- 1)) / dt[ti]
+                fact2 = (s[ti] + dt[ti] * qout[ti] .- 1)
             elseif ti<tj
-                timeslice(ti,tj) .=
-                    qt[tj] .* (1 ./ qout[ti] .* (1 .-s[ti]) .* (1 .-s[tj]) .* dotprod(s, ti, tj)) / dt[ti]
+                fact2 = (1 .-s[ti]) .* (1 .-s[tj]) .* dotprod(s, ti, tj)
             end
+            res  = qt[tj] .* (fact .* fact2)
+            II,JJ,VV = findnz(res)
+            append!(I, II.+(ti-1)*n)
+            append!(J, JJ.+(tj-1)*n)
+            append!(V, VV)
         end
     end
 
+    G = sparse(I,J,V, n*m, n*m)
+
     if dt[end] == Inf  # account for absorbing boundary
-        timeslice(m,m) .= qt[m]
+        G[(m-1)*n+1:end, (m-1)*n+1:end] = qt[m]
     end
-    T
+    G
 end
 
 function dotprod(s, i, j)
@@ -47,7 +55,7 @@ end
 
 
 """ terminal time commitor. 1 on inds and 0 on the rest for the terminal time """
-function termcom(inds, n)
+function termcom(inds::Vector, n)
     c = zeros(n)
     c[inds] .= 1
     c

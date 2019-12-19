@@ -6,7 +6,7 @@ gauss(x, mu, sigma) = 1 / (sigma * sqrt(2*pi)) * exp( - 1/2 * ((x-mu)/sigma)^2)
 PotentialShiftingBarrier(sigma) = (x,t) -> gauss(x, 0.2 + t/2, sigma)
 
 PotentialDoubleWell() = (x,t) -> (x^2-1)^2 
-ShiftingWells() = (x,t) -> (x^2-1)^2+x*t 
+#ShiftingWells() = (x,t) -> (x^2-1)^2+x*t 
 
 AppearingBarrier() = (x,t) -> t*gauss(x, .5, 0.1)
 VanishingBarrier(;mu=.5, sigma=.1) = (x,t) -> (1-t) * gauss(x, mu, sigma)

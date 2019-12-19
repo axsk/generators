@@ -3,13 +3,13 @@
 # with density p and flow field u
 # for incompressible flows grad u = 0
 
-Base.range(a,b) = range(a,b, step=1)
+#Base.range(a,b) = range(a,b, step=1)
 Base.range(a,b,n::Int) = range(a, b, length=n)
 
 @with_kw struct Flow <: Process
     u = (t, x, y)->[1,0]
-    xs = range(0,nx)
-    ys = range(0,ny)
+    xs = range(0,nx, step=1)
+    ys = range(0,ny, step=1)
 end
 
 generatormatrix(f::Flow, t) = flowgenerator(f.xs, f.ys, (x,y) -> f.u(x,y,t))
