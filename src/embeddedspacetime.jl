@@ -18,6 +18,8 @@ function galerkin(Qs, dt)
 
     for ti in 1:m
         for tj in ti:m
+            qinv = 1. /qout[ti]
+            replace!(qinv, Inf=>0)
             if ti==tj
                 timeslice(ti,tj) .=
                     qt[tj] .* (1 ./ qout[ti] .* (s[ti] + dt[ti] * qout[ti] .- 1)) / dt[ti]
