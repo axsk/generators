@@ -14,11 +14,11 @@ function galerkin(Qs::Vector{<:SparseMatrixCSC}, dt)
     V = Float64[]
 
     qout = [collect(-diag(Qs[t])) for t in 1:m]
+    s = [exp.(-dt[t]*qout[t]) for t in 1:m] # note that we still need the possible 0 rates here (c.f. below). in case of dt == Inf this can lead to 0*Inf = NaN
     for i=1:m
-        replace!(qout[i], 0=>1.) # in case of 0 rates, replace with 1 to avoid division by 0. should not change any result since we multiply corresponding rows zero rates anyhow.
+        replace!(qout[i], 0=>1.) # in case of 0 rates, replace with 1 to avoid division by 0. should not change any result since we multiply corresponding rows with zero rates later.
     end
     qt = [dropzeros((Qs[t] - Diagonal(Qs[t])) ./ qout[t]) for t in 1:m]
-    s = [exp.(-dt[t]*qout[t]) for t in 1:m]
 
     for ti in 1:m
         for tj in ti:m
@@ -62,7 +62,7 @@ function termcom(inds::Vector, n)
 end
 
 function commitor(T, terminal)
-    TT = T |> collect
+    TT = T
     nm = size(TT, 1)
     n = length(terminal)
     bnd = nm - n
