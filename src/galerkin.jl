@@ -26,7 +26,7 @@ function galerkin(Qs::Vector{<:SparseMatrixCSC}, dt)
             if ti==tj
                 fact2 = (s[ti] + dt[ti] * qout[ti] .- 1)
             elseif ti<tj
-                fact2 = (1 .-s[ti]) .* (1 .-s[tj]) .* dotprod(s, ti, tj)
+                fact2 = (1 .-s[ti]) .* (1 .-s[tj]) .* mycumprod(s, ti, tj)
             end
             res  = qt[tj] .* (fact .* fact2)
             II,JJ,VV = findnz(res)
@@ -44,7 +44,8 @@ function galerkin(Qs::Vector{<:SparseMatrixCSC}, dt)
     G
 end
 
-function dotprod(s, i, j)
+# cumulative product used in the holding probability between different time boxes
+function mycumprod(s, i, j)
     prod = ones(length(s[1]))
     for k = i+1 : j-1
         prod .*= s[k]
