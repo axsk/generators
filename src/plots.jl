@@ -55,7 +55,7 @@ function plot!(plot::Makie.Wireframe{ <: Tuple{Array{Float64,3}}})
         end
     end
 end
-
+#=
 function myquiver(xs, ys, u)
     tx, ty, tux, tuy = [], [], [], []
     for x in xs
@@ -69,3 +69,4 @@ function myquiver(xs, ys, u)
     end
     quiver(tx,ty,quiver=(tux,tuy))
 end
+=#

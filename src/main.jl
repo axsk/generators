@@ -144,7 +144,7 @@ function optimize_maxassignment(c, m)
   ind = vertexindices(c, m)
 
   for i in 1:n
-    m = argmax(c[ind, i])    
+    m = argmax(c[ind, i])
     A[i, m] = 1
   end
 

@@ -57,7 +57,8 @@ function generator(t, conf::BickleyJet)
     dy = step(ys)
 
     # optimized functions for the flow using independence on other variables
-    @memoize function vflow(i,j,t)
+    #@memoize 
+    function vflow(i,j,t)
         xx = (xs[j]+xs[j+1]) / 2
         flow = derivative(x->psi(t,x,ys[i+1]), xx) * abs(dx)
         #@show "v",t,i,j,flow
@@ -66,7 +67,8 @@ function generator(t, conf::BickleyJet)
         pos, neg
     end
 
-    @memoize function hflow(i,j,t)
+    #@memoize
+    function hflow(i,j,t)
         yy = (ys[i]+ys[i+1]) / 2
         flow = derivative(y->-psi(t,xs[j+1],y), yy) * abs(dy)
         #@show "h",t,i,j,flow
