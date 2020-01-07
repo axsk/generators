@@ -6,11 +6,17 @@ git-tree-sha1 = "051c95d6836228d120f5f4b984dd5aba1624f716"
 uuid = "621f4979-c628-5d54-868e-fcf4e3e8185c"
 version = "0.5.0"
 
+[[AbstractNumbers]]
+deps = ["SpecialFunctions"]
+git-tree-sha1 = "166dd550832720b4c851f30e5938e675e42c16d4"
+uuid = "85c772de-338a-5e7f-b815-41e76c26ac1f"
+version = "0.2.0"
+
 [[AbstractPlotting]]
-deps = ["ColorBrewer", "ColorTypes", "Colors", "Contour", "DocStringExtensions", "FFMPEG", "FileIO", "FixedPointNumbers", "FreeType", "FreeTypeAbstraction", "GeometryTypes", "ImageMagick", "IntervalSets", "LinearAlgebra", "Markdown", "Observables", "Packing", "PlotUtils", "Printf", "Random", "Serialization", "Showoff", "SignedDistanceFields", "SparseArrays", "StaticArrays", "Statistics", "StructArrays", "UnicodeFun"]
-git-tree-sha1 = "ebcbb6a9c25c1d21020b7068d2f796e55d472c74"
+deps = ["AbstractNumbers", "ColorBrewer", "ColorSchemes", "ColorTypes", "Colors", "Contour", "DocStringExtensions", "FFMPEG", "FileIO", "FixedPointNumbers", "FreeType", "FreeTypeAbstraction", "GeometryTypes", "ImageMagick", "IntervalSets", "LinearAlgebra", "Markdown", "Observables", "Packing", "PlotUtils", "Printf", "Random", "Serialization", "Showoff", "SignedDistanceFields", "SparseArrays", "StaticArrays", "Statistics", "StructArrays", "UnicodeFun"]
+git-tree-sha1 = "eeabdd60b61c34103fd03b00e0fa0c8dc54f9413"
 uuid = "537997a7-5e4e-5d89-9595-2241ea00577e"
-version = "0.9.10"
+version = "0.9.15"
 
 [[Adapt]]
 deps = ["LinearAlgebra"]
@@ -176,6 +182,12 @@ deps = ["Test"]
 git-tree-sha1 = "89e7e7ed20af73d9f78877d2b8d1194e7b6ff13d"
 uuid = "ed09eef8-17a6-5b46-8889-db040fac31e3"
 version = "0.3.0"
+
+[[Conda]]
+deps = ["JSON", "VersionParsing"]
+git-tree-sha1 = "9a11d428dcdc425072af4aea19ab1e8c3e01c032"
+uuid = "8f4d0f93-b110-5947-807f-2305c1781a2d"
+version = "1.3.0"
 
 [[Contour]]
 deps = ["LinearAlgebra", "StaticArrays", "Test"]
@@ -1037,10 +1049,10 @@ uuid = "789caeaf-c7a9-5a7d-9973-96adeb23e2a0"
 version = "6.15.0"
 
 [[StructArrays]]
-deps = ["PooledArrays", "Requires"]
-git-tree-sha1 = "8b4ea677c4dfbcb538695e853207a9f70f84be20"
+deps = ["PooledArrays", "Tables", "WeakRefStrings"]
+git-tree-sha1 = "e860d3808176ace576a45d658ba80d7c815bf1ce"
 uuid = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
-version = "0.4.0"
+version = "0.4.1"
 
 [[SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
@@ -1099,11 +1111,22 @@ git-tree-sha1 = "63cbbd00217fc9aafedf055b60459c1ae7e01ecc"
 uuid = "1cfade01-22cf-5700-b092-accc4b62d6e1"
 version = "0.4.0"
 
+[[VersionParsing]]
+git-tree-sha1 = "80229be1f670524750d905f8fc8148e5a8c4537f"
+uuid = "81def892-9a0e-5fdd-b105-ffc91e053289"
+version = "1.2.0"
+
 [[VertexSafeGraphs]]
 deps = ["LightGraphs"]
 git-tree-sha1 = "08137053c117afb92f59497160ac2d12abec66d8"
 uuid = "19fa3120-7c27-5ec5-8db8-b0b0aa330d6f"
 version = "0.1.0"
+
+[[WeakRefStrings]]
+deps = ["Random", "Test"]
+git-tree-sha1 = "9a0bb82eede528debe631b642eeb48a631a69bc2"
+uuid = "ea10d353-3f73-51f8-a26c-33c1cb351aa5"
+version = "0.6.1"
 
 [[Widgets]]
 deps = ["Colors", "Dates", "Observables", "OrderedCollections"]
