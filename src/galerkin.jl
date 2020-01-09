@@ -15,20 +15,21 @@ function galerkin(Qs::Vector{<:SparseMatrixCSC}, dt)
 
     qout = [collect(-diag(Qs[t])) for t in 1:m]
     s = [exp.(-dt[t]*qout[t]) for t in 1:m] # note that we still need the possible 0 rates here (c.f. below). in case of dt == Inf this can lead to 0*Inf = NaN
-    for i=1:m
-        replace!(qout[i], 0=>1.) # in case of 0 rates, replace with 1 to avoid division by 0. should not change any result since we multiply corresponding rows with zero rates later.
-    end
-    qt = [dropzeros((Qs[t] - Diagonal(Qs[t])) ./ qout[t]) for t in 1:m]
+    qt = [dropzeros(replace((Qs[t] - Diagonal(Qs[t])) ./ qout[t], NaN => 0)) for t in 1:m]
 
     for ti in 1:m
         for tj in ti:m
-            fact = 1 ./ qout[ti] ./ dt[ti]
             if ti==tj
-                fact2 = (s[ti] + dt[ti] * qout[ti] .- 1)
+                fact = (s[ti] + dt[ti] * qout[ti] .- 1) ./ qout[ti]
+                # if qout == 0, fact should calculate (1-1)/0 = NaN, but actually we have no transition, so set it to 0
+                replace!(fact, NaN => 0)
             elseif ti<tj
-                fact2 = (1 .-s[ti]) .* (1 .-s[tj]) .* mycumprod(s, ti, tj)
+                t = (1 .- s[ti]) ./ qout[ti]
+                # if qout == 0, t should calculate NaN, but actually the integral solves to 1
+                replace!(t, NaN => 1)
+                fact = t .* (1 .- s[tj]) .* mycumprod(s, ti, tj)
             end
-            res  = qt[tj] .* (fact .* fact2)
+            res  = qt[tj] .* (fact ./ dt[ti])
             II,JJ,VV = findnz(res)
             append!(I, II.+(ti-1)*n)
             append!(J, JJ.+(tj-1)*n)
