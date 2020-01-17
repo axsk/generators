@@ -133,7 +133,7 @@ function optimize_maxassignment(c, m)
   "return the A matrix maximizing the objective o(A) = sum_i=1^m max(chi(:, i))
    this means that the commitors are distributed such that the sum of the maximal membership of each cluster is maximized
 
-  ind is a list[m] of the indicies at which the succesive clusters are maximal
+  ind is a heuristic list[m] of the indicies at which the succesive clusters are maximal
   each commitor (column of c) gets assigned to one of the clusters
   assigning commitor c[:, i] to cluster m, the growth of the objective is c[ind[m], m].
   so we want to assign it to the cluster m such that that term is maximized for each c_i"
