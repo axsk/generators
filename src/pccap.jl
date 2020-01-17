@@ -1,11 +1,11 @@
 import Arpack: eigs
 using LinearAlgebra
 
-function pccap(T::Matrix, n::Integer; opt = false)
+function pccap(T::Matrix, n::Integer; optimize = false)
     israte = isratematrix(T)
     pi     = stationarydensity(T, israte)
     X, λ   = schurvectors(T, pi, n, israte)
-    chi    = makeprobabilistic(X, false)
+    chi    = makeprobabilistic(X, optimize)
 end
 
 function isratematrix(T::Matrix)
@@ -23,11 +23,11 @@ function stationarydensity(T, israte=isratematrix(T))
     pi = pi / sum(pi)
 end
 
-function makeprobabilistic(X::Matrix, opt::Bool)
+function makeprobabilistic(X::Matrix, optimize::Bool)
     n = size(X, 2)
     A = innersimplexalgorithm(X)
-    if n > 2 && opt
-        A = opt(A, X, A->I3(A))
+    if n > 2 && optimize
+        A = opt(A, X)
     end
     chi = X*A
 end
@@ -101,6 +101,7 @@ function roeblitzcrit(A)
     return trace
 end
 
+using Optim
 function opt(A0, X)
     A = copy(A0)
     Av = view(A, 2:size(A,1), 2:size(A,2)) # view on the variable part
