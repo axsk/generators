@@ -56,40 +56,37 @@ function generator(t, conf::BickleyJet)
     dx = step(xs)
     dy = step(ys)
 
+    # indices xs[i], ys[j] denote the top left corner of the box
+    # vx(i,j,t) is the horizontal velocity at the center of the edge between box (i,j) and (i,j+1), i.e. at x[j+1]
+
     # optimized functions for the flow using independence on other variables
-    #@memoize 
-    function vflow(i,j,t)
-        xx = (xs[j]+xs[j+1]) / 2
-        flow = derivative(x->psi(t,x,ys[i+1]), xx) * abs(dx)
-        #@show "v",t,i,j,flow
-        pos = max( flow, 0)
-        neg = max(-flow, 0)
-        pos, neg
-    end
+    vy(x,y) = derivative(x-> psi(t,x,y), x)
+    vx(x,y) = derivative(y->-psi(t,x,y), y)
 
-    #@memoize
-    function hflow(i,j,t)
-        yy = (ys[i]+ys[i+1]) / 2
-        flow = derivative(y->-psi(t,xs[j+1],y), yy) * abs(dy)
-        #@show "h",t,i,j,flow
-        pos = max( flow, 0)
-        neg = max(-flow, 0)
-        pos, neg
-    end
-
+    ind = LinearIndices((1:nx, 1:ny))
+    ind = vcat(ind, ind[1,:]') # add indices for periodic x direction
     G = spzeros(ny*nx, ny*nx)
 
-    for i = 1:ny-1
-        for j = 1:nx-1
-            # from anchor i,j to bottom and right
-            cell = i + (j-1)*ny
-            pos, neg = vflow(i,j,t)
-            G[cell, cell+1]  = neg
-            G[cell+1, cell]  = pos
+    for i = 1:nx
+        for j = 1:ny
+            # from anchor i,j to right
+            from = ind[i,j]
+            to   = ind[i+1, j]
+            v = vx(xs[i+1], (ys[j]+ys[j+1])/2)
+            if v < 0
+                from, to = to, from
+            end
+            G[from, to] = abs(v) * abs(dx)
 
-            pos, neg = hflow(i,j,t)
-            G[cell, cell+ny]  = pos
-            G[cell+ny, cell]  = neg
+            # and to the bottom
+            j == ny && continue # reached the bottom edge
+            from = ind[i,j]
+            to   = ind[i,j+1]
+            v = vy((xs[i]+xs[i+1])/2, ys[j+1])
+            if v < 0 
+                from, to = to,from
+            end
+            G[from, to] = abs(v) * abs(dy)
         end
     end
 
