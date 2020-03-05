@@ -53,28 +53,3 @@ function mycumprod(s, i, j)
     end
     return prod
 end
-
-
-
-""" terminal time commitor. 1 on inds and 0 on the rest for the terminal time """
-function termcom(inds::Vector, n)
-    c = zeros(n)
-    c[inds] .= 1
-    c
-end
-
-function commitor(T, terminal)
-    TT = T
-    nm = size(TT, 1)
-    n = length(terminal)
-    bnd = nm - n
-
-    TT = TT - I
-    for i in bnd+1 : nm
-        TT[i,:] .= 0
-        TT[i,i] = 1
-    end
-    x = zeros(nm)
-    x[bnd+1:end] = terminal
-    TT\x
-end

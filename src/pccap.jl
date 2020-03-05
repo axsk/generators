@@ -21,6 +21,7 @@ function stationarydensity(T, israte=isratematrix(T))
     @assert isreal(pi)
     pi = abs.(pi) |> vec
     pi = pi / sum(pi)
+    #ones(length(pi))
 end
 
 function makeprobabilistic(X::Matrix, optimize::Bool)

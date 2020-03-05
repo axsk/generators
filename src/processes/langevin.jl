@@ -15,7 +15,7 @@ function sqra(V, xs, beta, flux; periodic = false)
         exp(- beta * V(x))
     end
 
-    G = zeros(n,n)
+    G = spzeros(n,n)
 
     for i = 1:n-1
             G[i, i+1] = sqrt(VV[i+1]   / VV[i])
