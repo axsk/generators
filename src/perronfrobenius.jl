@@ -4,17 +4,22 @@
 using LinearAlgebra
 
 const neumann_start = 1
-const neumann_n = 100
+const NEUMANN_N = 100
 
 # neumann series
 function jumpactivity(g)
-    sum(g^i for i=neumann_start:neumann_n)
+    power = one(g)
+    j = zero(g)
+    for i in 1:NEUMANN_N
+        power = power * g
+        j += power
+    end
+    j
 end
 
-function jumpactivity(g, f0)
+function project_jumpactivity(E, f0)
     nx = length(f0)
-    nt = round(Int, size(g, 1)/nx)
-    E = jumpactivity(g)
+    nt = round(Int, size(E, 1)/nx)
     activity = sum(E[1:nx, :] .* f0, dims=1)
     reshape(activity, nx, nt)
 end
