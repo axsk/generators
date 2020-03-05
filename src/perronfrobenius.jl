@@ -19,7 +19,7 @@ function jumpactivity(g, f0)
     reshape(activity, nx, nt)
 end
 
-function perronfrobenius(q, qs, ts)
+function perronfrobenius(g, qs, ts)
     nx = size(qs[1],1)
     nt = length(ts) - 1
     qout = [collect(-diag(q)) for q in qs]
@@ -28,7 +28,7 @@ function perronfrobenius(q, qs, ts)
     S = zeros(nx, nt)
     for i=1:nt
         # int_t[i]^t[i+1] exp(-qT + qx) dx
-        S[:,i] .= 1 ./ qout[i] .*(exp.(-qout[i]*(ts[end] - ts[i+1])) - exp.(-qout*(ts[end] - ts[i]))) / (ts[i+1]-ts[i])
+        S[:,i] .= 1 ./ qout[i] .*(exp.(-qout[i]*(ts[end] - ts[i+1])) - exp.(-qout[i]*(ts[end] - ts[i]))) / (ts[i+1]-ts[i])
     end
 
     # survival probaility from ts[1] to ts[end]
@@ -38,4 +38,5 @@ function perronfrobenius(q, qs, ts)
 
     Pf = sum(reshape(E, nx, nt, nx, nt)[:,1,:,:] .* reshape(S, 1, nx, nt), dims=3) |> x->reshape(x, nx, nx)
     Pf = Pf + surviveall
+    Pf' # since we multiply from right
 end

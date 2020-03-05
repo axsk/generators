@@ -4,10 +4,11 @@ using SparseArrays
 export galerkin
 
 #galerkin(Qs::Vector{Array}, dt) = galerkin(map(sparse, Qs), dt)
-function galerkin(Qs::Vector{<:SparseMatrixCSC}, dt)
+function galerkin(Qs::Vector{<:SparseMatrixCSC}, ts)
+    dt = diff(ts)
     n = size(Qs[1], 1)
-    m = length(Qs)
-    @assert length(dt) == m
+    m = length(dt)
+
 
     I = Int[]
     J = Int[]
