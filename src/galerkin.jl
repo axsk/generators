@@ -3,7 +3,7 @@ using SparseArrays
 
 export galerkin
 
-#galerkin(Qs::Vector{Array}, dt) = galerkin(map(sparse, Qs), dt)
+galerkin(Qs::Vector{<:Matrix}, dt) = galerkin(map(sparse, Qs), dt)
 function galerkin(Qs::Vector{<:SparseMatrixCSC}, ts)
     dt = diff(ts)
     n = size(Qs[1], 1)

@@ -28,7 +28,7 @@ function generatormatrix(p::BarrierSwitch, t)
         end
     end
 
-    if findfirst(x->x>=t, [tswitch...,Inf]) % 2 == 0
+    if findfirst(x->x>t, [tswitch...,Inf]) % 2 == 0
         i = 2 * cellresolution
         G[i, i+1] = 1
         G[i+1, i] = 1

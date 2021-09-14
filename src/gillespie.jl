@@ -11,8 +11,8 @@ function gillespie(qs, qts, x0, tmax)
     xs = [x]
     ts = [t]
     while t < tmax
-        qout = q[x,x]
-        dt = rand(Distributions.Exponential(qout))
+        qout = -q[x,x]
+        dt = rand(Distributions.Exponential(1/qout))
         if dt + t > qts[i+1]
             i += 1
             q = qs[i]
